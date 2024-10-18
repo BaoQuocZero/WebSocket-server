@@ -4,10 +4,10 @@
 
 ### Bước 1: Tải dự án từ GitHub
 
-1. **Clone dự án từ GitHub** về máy tính của bạn. Giả sử link GitHub của bạn là `https://github.com/username/WebSocket-server`, bạn thực hiện lệnh sau:
+1. **Clone dự án từ GitHub** về máy tính của bạn. Giả sử link GitHub của bạn là `[https://github.com/username/WebSocket-server](https://github.com/BaoQuocZero/WebSocket-server.git)`, bạn thực hiện lệnh sau:
 
    ```bash
-   git clone https://github.com/username/WebSocket-server
+   [git clone https://github.com/username/WebSocket-server](https://github.com/BaoQuocZero/WebSocket-server.git)
    ```
 
 2. **Di chuyển vào thư mục dự án**:
