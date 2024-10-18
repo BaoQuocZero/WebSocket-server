@@ -1,5 +1,115 @@
 # WebSocket-server
 
+### Hướng dẫn cài đặt Git và Node.js
+
+Trước khi bạn có thể chạy dự án từ GitHub và cài đặt các phụ thuộc Node.js, hãy đảm bảo rằng bạn đã cài đặt **Git** và **Node.js**. Dưới đây là hướng dẫn chi tiết cho từng bước:
+
+---
+
+### Cài đặt Git
+
+**Git** là công cụ quản lý mã nguồn phổ biến, giúp bạn clone dự án từ GitHub và quản lý phiên bản mã nguồn.
+
+#### Đối với Windows:
+
+1. Truy cập trang [tải Git cho Windows](https://git-scm.com/download/win).
+2. Tải về file `.exe` và chạy để cài đặt.
+3. Trong quá trình cài đặt, bạn có thể giữ nguyên các thiết lập mặc định.
+4. Sau khi cài đặt xong, mở **Command Prompt** hoặc **Git Bash** và kiểm tra Git đã cài đặt thành công bằng lệnh:
+
+   ```bash
+   git --version
+   ```
+
+   Nếu hiển thị phiên bản Git, cài đặt đã thành công.
+
+#### Đối với macOS:
+
+1. Bạn có thể cài đặt Git qua **Homebrew** (nếu đã cài Homebrew). Chạy lệnh sau để cài đặt:
+
+   ```bash
+   brew install git
+   ```
+
+2. Kiểm tra cài đặt Git bằng cách chạy:
+
+   ```bash
+   git --version
+   ```
+
+#### Đối với Linux:
+
+1. Chạy lệnh sau tùy vào hệ điều hành của bạn (Debian/Ubuntu hoặc CentOS/Fedora):
+
+   - Đối với Debian/Ubuntu:
+
+     ```bash
+     sudo apt update
+     sudo apt install git
+     ```
+
+   - Đối với CentOS/Fedora:
+
+     ```bash
+     sudo dnf install git
+     ```
+
+2. Kiểm tra cài đặt bằng lệnh:
+
+   ```bash
+   git --version
+   ```
+
+---
+
+### Cài đặt Node.js
+
+**Node.js** là môi trường chạy JavaScript trên server và cần thiết để chạy dự án WebSocket.
+
+#### Đối với Windows và macOS:
+
+1. Truy cập trang [tải Node.js](https://nodejs.org/), chọn phiên bản ổn định (LTS) và tải về file cài đặt.
+2. Chạy file `.exe` (Windows) hoặc `.pkg` (macOS) để cài đặt. Trong quá trình cài đặt, giữ các thiết lập mặc định.
+3. Sau khi cài đặt, mở **Command Prompt** (Windows) hoặc **Terminal** (macOS) và kiểm tra phiên bản Node.js và npm (Node Package Manager) bằng cách chạy:
+
+   ```bash
+   node --version
+   npm --version
+   ```
+
+   Nếu hiển thị phiên bản Node.js và npm, cài đặt đã thành công.
+
+#### Đối với Linux:
+
+1. Chạy các lệnh sau để cài đặt Node.js thông qua **NodeSource**:
+
+   - Đối với Ubuntu/Debian:
+
+     ```bash
+     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+     sudo apt install -y nodejs
+     ```
+
+   - Đối với CentOS/Fedora:
+
+     ```bash
+     curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+     sudo yum install -y nodejs
+     ```
+
+2. Kiểm tra cài đặt bằng lệnh:
+
+   ```bash
+   node --version
+   npm --version
+   ```
+
+---
+
+### Tiếp tục với hướng dẫn chạy dự án
+
+Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **Bước 1** của hướng dẫn ban đầu để tải về dự án từ GitHub và thực hiện các bước tiếp theo như cài đặt các phụ thuộc và chạy dự án.
+
 Để chạy dự án WebSocket sau khi tải về từ GitHub, bạn thực hiện theo các bước sau:
 
 ### Bước 1: Tải dự án từ GitHub
