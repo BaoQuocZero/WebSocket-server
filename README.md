@@ -1,138 +1,77 @@
 # WebSocket-server
 
-Đây là một đoạn code sử dụng Node.js để tạo một ứng dụng web cơ bản với sự kết hợp giữa HTTP server và WebSocket. Cùng phân tích từng phần:
+Để chạy dự án WebSocket sau khi tải về từ GitHub, bạn thực hiện theo các bước sau:
 
-### 1. Khai báo thư viện
-```javascript
-const WebSocket = require('ws');
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-```
-- **WebSocket**: Thư viện WebSocket dùng để tạo server WebSocket, hỗ trợ giao tiếp thời gian thực giữa server và client.
-- **http**: Thư viện HTTP gốc của Node.js dùng để tạo một HTTP server.
-- **fs**: Thư viện File System để đọc/ghi file.
-- **path**: Thư viện hỗ trợ xử lý đường dẫn file.
+### Bước 1: Tải dự án từ GitHub
 
-### 2. Tạo HTTP server
-```javascript
-const server = http.createServer((req, res) => {
-  if (req.url === '/' || req.url === '/index.html') {
-    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
-      if (err) {
-        res.writeHead(500);
-        res.end('Lỗi máy chủ');
-        return;
-      }
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(data);
-    });
-  } else {
-    const filePath = path.join(__dirname, req.url);
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        res.writeHead(404);
-        res.end('Không tìm thấy trang');
-        return;
-      }
+1. **Clone dự án từ GitHub** về máy tính của bạn. Giả sử link GitHub của bạn là `https://github.com/username/WebSocket-server`, bạn thực hiện lệnh sau:
 
-      let contentType = 'text/plain';
-      if (req.url.endsWith('.css')) {
-        contentType = 'text/css';
-      } else if (req.url.endsWith('.js')) {
-        contentType = 'application/javascript';
-      } else if (req.url.endsWith('.png')) {
-        contentType = 'image/png';
-      } else if (req.url.endsWith('.jpg') || req.url.endsWith('.jpeg')) {
-        contentType = 'image/jpeg';
-      }
+   ```bash
+   git clone https://github.com/username/WebSocket-server
+   ```
 
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(data);
-    });
-  }
-});
-```
-- Đây là HTTP server phục vụ các file tĩnh như `index.html`, CSS, JS, hình ảnh...
-- Nếu URL là `/` hoặc `/index.html`, nó sẽ phục vụ file `index.html`.
-- Nếu là các yêu cầu khác, server sẽ tìm file tương ứng với URL được yêu cầu và xác định loại file (CSS, JS, hình ảnh...) để trả về đúng MIME type cho trình duyệt.
+2. **Di chuyển vào thư mục dự án**:
 
-### 3. Tạo WebSocket server
-```javascript
-const wss = new WebSocket.Server({ server });
-```
-- **WebSocket server** được tạo, chia sẻ cùng một HTTP server để có thể xử lý cả giao thức HTTP và WebSocket.
+   ```bash
+   cd WebSocket-server
+   ```
 
-### 4. Xử lý kết nối WebSocket
-```javascript
-let clients = [];
-const clientNames = new Map();
+### Bước 2: Cài đặt các phụ thuộc
 
-wss.on('connection', (ws) => {
-  clients.push(ws);
-  console.log('Một client đã kết nối');
-  ws.send('Vui lòng nhập tên của bạn:');
-```
-- Khi một client kết nối, nó sẽ được thêm vào mảng `clients` để theo dõi các kết nối.
-- Server gửi yêu cầu để client nhập tên.
+1. Dự án này sử dụng Node.js, vì vậy bạn cần cài đặt tất cả các package cần thiết bằng cách chạy lệnh sau:
 
-### 5. Nhận tên người dùng
-```javascript
-  ws.once('message', (name) => {
-    const trimmedName = name.toString().trim();
-    clientNames.set(ws, trimmedName);
-    console.log(`${trimmedName} đã kết nối`);
-    broadcast(`${trimmedName} đã tham gia vào phòng chat`, ws);
-    ws.send(`Chào mừng ${trimmedName}! Bạn có thể bắt đầu gửi tin nhắn.`);
-  });
-```
-- Lần đầu tiên nhận tin nhắn từ client, server hiểu đó là tên người dùng.
-- Tên người dùng được lưu trong `clientNames` và phát thông báo cho tất cả các client khác.
+   ```bash
+   npm install
+   ```
 
-### 6. Xử lý tin nhắn từ client
-```javascript
-  ws.on('message', (message) => {
-    const name = clientNames.get(ws) || 'Unknown';
-    const trimmedMessage = message.toString().trim();
-    if (trimmedMessage.length > 0) {
-      console.log(`${name}: ${trimmedMessage}`);
-      broadcast(`${name}: ${trimmedMessage}`, ws);
-    }
-  });
-```
-- Mỗi khi nhận được tin nhắn, server sẽ phát tin nhắn này đến tất cả các client trừ người gửi.
+   Lệnh này sẽ đọc file `package.json` và cài đặt các thư viện như `ws` (WebSocket) cũng như các phụ thuộc khác.
 
-### 7. Xử lý ngắt kết nối
-```javascript
-  ws.on('close', () => {
-    const name = clientNames.get(ws) || 'Unknown';
-    console.log(`${name} đã ngắt kết nối`);
-    clients = clients.filter((client) => client !== ws);
-    clientNames.delete(ws);
-    broadcast(`${name} đã rời khỏi phòng chat`, ws);
-  });
-```
-- Khi một client ngắt kết nối, server sẽ xóa client đó khỏi danh sách và thông báo cho những client khác.
+### Bước 3: Chạy dự án
 
-### 8. Hàm phát sóng tin nhắn
-```javascript
-function broadcast(message, sender) {
-  clients.forEach((client) => {
-    if (client !== sender && client.readyState === WebSocket.OPEN) {
-      client.send(message);
-    }
-  });
-}
-```
-- Hàm `broadcast` gửi tin nhắn đến tất cả các client ngoại trừ người gửi tin nhắn.
+1. Sau khi cài đặt xong, bạn có thể chạy server bằng lệnh:
 
-### 9. Khởi động server
-```javascript
-const PORT = 8080;
-server.listen(PORT, () => {
-  console.log(`HTTP và WebSocket Server đang lắng nghe trên cổng ${PORT}`);
-});
-```
-- Server lắng nghe trên cổng 8080.
+   ```bash
+   node server.js
+   ```
 
-Tóm lại, đoạn code này thiết lập một server Node.js với HTTP để phục vụ file tĩnh và WebSocket để tạo phòng chat thời gian thực. Người dùng kết nối sẽ nhập tên, gửi và nhận tin nhắn qua WebSocket.
+2. Mở trình duyệt và truy cập vào địa chỉ sau để kiểm tra ứng dụng:
+
+   ```bash
+   http://localhost:8080/index.html
+   ```
+
+   Giao diện chat sẽ hiện ra, và bạn có thể nhập tên người dùng rồi bắt đầu chat.
+
+### Bước 4: Xử lý sự cố
+
+- **Kiểm tra cổng**: Nếu cổng `8080` đã được sử dụng bởi một dịch vụ khác, bạn có thể thay đổi cổng trong file `server.js` bằng cách sửa giá trị biến `PORT`:
+
+   ```javascript
+   const PORT = 8080; // Thay đổi cổng tại đây nếu cần
+   ```
+
+- **Lỗi thiếu thư viện**: Nếu gặp lỗi không tìm thấy module, hãy chắc chắn rằng bạn đã chạy `npm install` để cài đặt tất cả các thư viện cần thiết.
+
+### Bước 5: Đẩy thay đổi lên GitHub (nếu cần)
+
+Sau khi thực hiện các thay đổi, nếu muốn đẩy ngược lại lên GitHub, bạn có thể sử dụng các lệnh sau:
+
+1. **Thêm thay đổi vào git**:
+
+   ```bash
+   git add .
+   ```
+
+2. **Commit thay đổi**:
+
+   ```bash
+   git commit -m "Cập nhật dự án WebSocket-server"
+   ```
+
+3. **Đẩy thay đổi lên GitHub**:
+
+   ```bash
+   git push origin main
+   ```
+
+Dự án của bạn sẽ được cập nhật trên GitHub và sẵn sàng cho những người khác tải về và sử dụng.
