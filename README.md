@@ -4,10 +4,10 @@
 
 ### Bước 1: Tải dự án từ GitHub
 
-1. **Clone dự án từ GitHub** về máy tính của bạn. Giả sử link GitHub của bạn là `[https://github.com/username/WebSocket-server](https://github.com/BaoQuocZero/WebSocket-server.git)`, bạn thực hiện lệnh sau:
+1. **Clone dự án từ GitHub** về máy tính của bạn, bạn thực hiện lệnh sau:
 
    ```bash
-   [git clone https://github.com/username/WebSocket-server](https://github.com/BaoQuocZero/WebSocket-server.git)
+   https://github.com/BaoQuocZero/WebSocket-server.git
    ```
 
 2. **Di chuyển vào thư mục dự án**:
@@ -51,27 +51,3 @@
    ```
 
 - **Lỗi thiếu thư viện**: Nếu gặp lỗi không tìm thấy module, hãy chắc chắn rằng bạn đã chạy `npm install` để cài đặt tất cả các thư viện cần thiết.
-
-### Bước 5: Đẩy thay đổi lên GitHub (nếu cần)
-
-Sau khi thực hiện các thay đổi, nếu muốn đẩy ngược lại lên GitHub, bạn có thể sử dụng các lệnh sau:
-
-1. **Thêm thay đổi vào git**:
-
-   ```bash
-   git add .
-   ```
-
-2. **Commit thay đổi**:
-
-   ```bash
-   git commit -m "Cập nhật dự án WebSocket-server"
-   ```
-
-3. **Đẩy thay đổi lên GitHub**:
-
-   ```bash
-   git push origin main
-   ```
-
-Dự án của bạn sẽ được cập nhật trên GitHub và sẵn sàng cho những người khác tải về và sử dụng.
