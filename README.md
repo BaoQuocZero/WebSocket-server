@@ -132,7 +132,7 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
    cd WebSocket-server
    ```
 
-   Hoặc mở `cmd` trong thư mục gốc của dự án.
+   Hoặc mở `cmd` trong thư mục gốc `...WebSocket-server\` của dự án.
 
 ### Bước 2: Cài đặt các phụ thuộc
 
