@@ -6,7 +6,7 @@ Trước khi bạn có thể chạy dự án từ GitHub và cài đặt các ph
 
 ---
 
-### Cài đặt Git
+### Cài đặt Git (tùy chọn)
 
 **Git** là công cụ quản lý mã nguồn phổ biến, giúp bạn clone dự án từ GitHub và quản lý phiên bản mã nguồn.
 
@@ -62,6 +62,12 @@ Trước khi bạn có thể chạy dự án từ GitHub và cài đặt các ph
 
 ---
 
+### Nếu không cài đặt git
+
+1. Nhấn vào nút `<> Code`.
+2. Nhấn vào nút `Download Zip`.
+3. Giải nén và tiếp tục.
+
 ### Cài đặt Node.js
 
 **Node.js** là môi trường chạy JavaScript trên server và cần thiết để chạy dự án WebSocket.
@@ -114,7 +120,7 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
 
 ### Bước 1: Tải dự án từ GitHub
 
-1. **Clone dự án từ GitHub** về máy tính của bạn, bạn thực hiện lệnh sau:
+1. **Clone dự án từ GitHub (bỏ qua nếu bạn đã `Download Zip`)** về máy tính của bạn, bạn thực hiện lệnh sau:
 
    ```bash
    https://github.com/BaoQuocZero/WebSocket-server.git
@@ -125,6 +131,8 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
    ```bash
    cd WebSocket-server
    ```
+
+   Hoặc mở `cmd` trong thư mục gốc của dự án.
 
 ### Bước 2: Cài đặt các phụ thuộc
 
