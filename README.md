@@ -172,7 +172,8 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
 
 ## Giải thích code của file server.js 
 
-![Giải thích ngôn ngữ của chúa](https://media.giphy.com/media/8JrizwqvdF64cxhFSx/giphy.gif) ![Cách để hiểu chúa nói gì](https://giphy.com/gifs/pudgypenguins-internet-bard-chatgpt-0lGd2OXXHe4tFhb7Wh)
+![Giải thích ngôn ngữ của chúa](https://media.giphy.com/media/8JrizwqvdF64cxhFSx/giphy.gif) 
+![Cách để hiểu chúa nói gì](https://media.giphy.com/media/0lGd2OXXHe4tFhb7Wh/giphy.gif)
 
 Đoạn mã này thiết lập một server Node.js vừa phục vụ các file tĩnh qua HTTP vừa tạo một WebSocket server để hỗ trợ giao tiếp thời gian thực giữa các client (như một phòng chat). Dưới đây là giải thích chi tiết từng phần của mã:
 
