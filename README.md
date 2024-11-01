@@ -170,7 +170,7 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
 
 - **Lỗi thiếu thư viện**: Nếu gặp lỗi không tìm thấy module, hãy chắc chắn rằng bạn đã chạy `npm install` để cài đặt tất cả các thư viện cần thiết.
 
-#### Giải thích code của file server.js 
+## Giải thích code của file server.js 
 
 Đoạn mã này thiết lập một server Node.js vừa phục vụ các file tĩnh qua HTTP vừa tạo một WebSocket server để hỗ trợ giao tiếp thời gian thực giữa các client (như một phòng chat). Dưới đây là giải thích chi tiết từng phần của mã:
 
