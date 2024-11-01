@@ -169,3 +169,148 @@ Sau khi đã cài đặt **Git** và **Node.js**, bạn có thể quay lại **B
    ```
 
 - **Lỗi thiếu thư viện**: Nếu gặp lỗi không tìm thấy module, hãy chắc chắn rằng bạn đã chạy `npm install` để cài đặt tất cả các thư viện cần thiết.
+
+#### Giải thích code của file server.js 
+
+Đoạn mã này thiết lập một server Node.js vừa phục vụ các file tĩnh qua HTTP vừa tạo một WebSocket server để hỗ trợ giao tiếp thời gian thực giữa các client (như một phòng chat). Dưới đây là giải thích chi tiết từng phần của mã:
+
+### Phần 1: Thiết lập HTTP Server để phục vụ file tĩnh
+```javascript
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const server = http.createServer((req, res) => {
+  // Nếu truy cập vào root (/) hoặc /index.html, phục vụ file index.html
+  if (req.url === '/' || req.url === '/index.html') {
+    fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        res.end('Lỗi máy chủ');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end(data);
+    });
+  } else {
+    // Đối với các yêu cầu khác (như file CSS, JS, hình ảnh), phục vụ file tương ứng
+    const filePath = path.join(__dirname, req.url);
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        res.end('Không tìm thấy trang');
+        return;
+      }
+
+      // Xác định loại nội dung dựa trên phần mở rộng file
+      let contentType = 'text/plain';
+      if (req.url.endsWith('.css')) {
+        contentType = 'text/css';
+      } else if (req.url.endsWith('.js')) {
+        contentType = 'application/javascript';
+      } else if (req.url.endsWith('.png')) {
+        contentType = 'image/png';
+      } else if (req.url.endsWith('.jpg') || req.url.endsWith('.jpeg')) {
+        contentType = 'image/jpeg';
+      } // Thêm các loại MIME khác nếu cần
+
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    });
+  }
+});
+```
+
+- **Giải thích**:
+  - Tạo một HTTP server phục vụ các file tĩnh. 
+  - Nếu truy cập vào root hoặc `/index.html`, server sẽ trả về `index.html`.
+  - Với các file khác (như `.css`, `.js`, `.png`, `.jpg`), server trả về file tương ứng dựa trên đường dẫn của request. MIME type của file được xác định để trình duyệt biết cách hiển thị đúng nội dung.
+
+### Phần 2: Thiết lập WebSocket Server
+```javascript
+const WebSocket = require('ws');
+
+// Sử dụng HTTP server để tạo WebSocket server
+const wss = new WebSocket.Server({ server });
+
+let clients = [];                  // Danh sách client kết nối
+const clientNames = new Map();      // Map để lưu tên người dùng của từng client
+
+wss.on('connection', (ws) => {
+  clients.push(ws);                // Thêm client mới vào danh sách
+  console.log('Một client đã kết nối');
+  ws.send('Vui lòng nhập tên của bạn:'); // Gửi yêu cầu nhập tên khi client kết nối
+
+  // Xử lý khi client gửi tên
+  ws.once('message', (name) => {
+    const trimmedName = name.toString().trim();    // Xử lý tên để loại bỏ khoảng trắng
+    clientNames.set(ws, trimmedName);              // Lưu tên vào clientNames
+    console.log(`${trimmedName} đã kết nối`);
+    broadcast(`${trimmedName} đã tham gia vào phòng chat`, ws);  // Thông báo cho các client khác
+    ws.send(`Chào mừng ${trimmedName}! Bạn có thể bắt đầu gửi tin nhắn.`);
+  });
+
+  // Xử lý tin nhắn chat
+  ws.on('message', (message) => {
+    const name = clientNames.get(ws) || 'Unknown';
+    const trimmedMessage = message.toString().trim();
+    if (trimmedMessage.length > 0) {
+      console.log(`${name}: ${trimmedMessage}`);
+      broadcast(`${name}: ${trimmedMessage}`, ws);
+    }
+  });
+
+  // Xử lý khi client ngắt kết nối
+  ws.on('close', () => {
+    const name = clientNames.get(ws) || 'Unknown';
+    console.log(`${name} đã ngắt kết nối`);
+    clients = clients.filter((client) => client !== ws);  // Xóa client khỏi danh sách
+    clientNames.delete(ws);                               // Xóa tên khỏi clientNames
+    broadcast(`${name} đã rời khỏi phòng chat`, ws);      // Thông báo cho các client khác
+  });
+
+  // Xử lý lỗi
+  ws.on('error', (err) => {
+    console.error(`Lỗi: ${err}`);
+  });
+});
+```
+
+- **Giải thích**:
+  - Tạo WebSocket server sử dụng HTTP server vừa tạo.
+  - Khi một client kết nối:
+    - Thêm client vào danh sách `clients`.
+    - Yêu cầu client nhập tên và lưu tên vào `clientNames`.
+    - Khi client gửi tin nhắn, server truyền tin nhắn này đến tất cả client khác.
+  - Nếu client ngắt kết nối, server xóa client khỏi danh sách và gửi thông báo cho các client khác.
+
+### Phần 3: Hàm phát sóng tin nhắn đến tất cả client
+```javascript
+function broadcast(message, sender) {
+  clients.forEach((client) => {
+    if (client !== sender && client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  });
+}
+```
+
+- **Giải thích**:
+  - Hàm này gửi tin nhắn đến tất cả client khác (trừ người gửi).
+  - Điều kiện `client.readyState === WebSocket.OPEN` đảm bảo rằng tin nhắn chỉ được gửi đến các client đang mở kết nối.
+
+### Phần 4: Khởi động Server
+```javascript
+const PORT = 8080;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+  console.log(`http://localhost:${PORT}/index.html`);
+});
+```
+
+- **Giải thích**:
+  - Server HTTP và WebSocket bắt đầu lắng nghe trên cổng 8080.
+  - Khi server chạy thành công, console sẽ hiển thị đường dẫn truy cập.
+
+Với mã này, bạn có thể phục vụ các file tĩnh và tạo phòng chat với WebSocket, nơi nhiều client có thể gửi và nhận tin nhắn thời gian thực.
